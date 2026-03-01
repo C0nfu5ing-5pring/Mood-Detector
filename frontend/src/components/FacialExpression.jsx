@@ -9,6 +9,7 @@ export default function FacialExpression() {
       await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
       await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
     };
+
     const startVideo = () => {
       navigator.mediaDevices
         .getUserMedia({ video: true })
@@ -17,6 +18,7 @@ export default function FacialExpression() {
         })
         .catch((err) => console.error("Error accessing webcam: ", err));
     };
+
     const handleVideoPlay = () => {
       setInterval(async () => {
         const detections = await faceapi
