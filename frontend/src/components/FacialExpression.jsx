@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
 export default function FacialExpression() {
   const videoRef = useRef();
+  const [expression, setExpression] = useState("");
 
   const loadModels = async () => {
     const MODEL_URL = "/models";
@@ -27,7 +28,7 @@ export default function FacialExpression() {
     let _expression = "";
 
     if (!detections || detections.length === 0) {
-      console.log("No face detected");
+      setExpression(_expression);
       return;
     }
 
@@ -38,23 +39,29 @@ export default function FacialExpression() {
       }
     }
 
-    alert(_expression);
+    setExpression(_expression);
   };
 
   useEffect(() => {
     loadModels().then(startVideo);
-    videoRef.current && videoRef.current.addEventListener("play", detectMood);
-  }, 1000);
+  }, []);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className="flex flex-col gap-3 items-center">
       <video
         ref={videoRef}
         autoPlay
         muted
-        style={{ width: "720px", height: "560px" }}
+        playsInline
+        className="border-3 rounded-2xl w-80"
       />
-      <button onClick={detectMood}>Detect Mood</button>
+      <button
+        onClick={detectMood}
+        className="bg-[#0c5555] text-[#f4f4f5] px-3 py-1 w-full rounded-md border-[#8ffff1] border-2 cursor-pointer active:scale-95 transition-all"
+      >
+        Detect Mood
+      </button>
+      <p>Your mood: {expression || null}</p>
     </div>
   );
 }
